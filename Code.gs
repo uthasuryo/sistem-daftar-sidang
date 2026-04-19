@@ -12,10 +12,6 @@ const SHEET_LOG = 'Log Aktivitas';
 // ============================================================
 // ENTRY POINT - Web App
 // ============================================================
-
-// ==== FEATURE FLAG ====
-// Set to true to enable email notifications; currently disabled
-const SEND_EMAIL_ENABLED = false;
 function doGet(e) {
   return HtmlService.createTemplateFromFile('Index')
     .evaluate()
@@ -260,7 +256,7 @@ function cekStatus(nim) {
           prodi:            String(row[3] || '-'),
           jenjang:          String(row[4] || '-'),
           judul:            String(row[5] || '-'),
-          status:           String(row[6] || 'Menunggu Verifikasi').trim(),
+          status:           String(row[6] || 'Menunggu Verifikasi'),
           tanggalDaftar:    String(row[7] || '-'),
           tanggalUjian:     String(row[8] || 'Belum dijadwalkan'),
           ruang:            String(row[9] || 'Belum ditentukan'),
@@ -286,11 +282,8 @@ function cekStatus(nim) {
 // ============================================================
 function debugCekStatus() {
   // Ganti NIM_TEST dengan NIM yang ada di spreadsheet Anda
-  var result = cekStatus('NIM_TEST');
-  Logger.log('Result: ' + JSON.stringify(result));
-  if (result.found) {
-    Logger.log('Status dari Spreadsheet: ' + result.data[0].status);
-  }
+  var result = cekStatus('132100078');
+  Logger.log(JSON.stringify(result));
 }
 
 // ============================================================
@@ -350,18 +343,5 @@ Institut Agama Islam Al-Aqidah Al-Hasyimiyyah Jakarta
     GmailApp.sendEmail(formData.email, subject, body);
   } catch (e) {
     Logger.log('Gagal kirim email: ' + e.toString());
-
-function syncStatusSheets(e) {
-  const sheet = e.range.getSheet();
-  if (sheet.getName() !== 'Pendaftaran') return;
-  const statusCol = 2;
-  const row = e.range.getRow();
-  if (e.range.getColumn() !== statusCol) return;
-  const newStatus = e.value;
-  if (!newStatus) return;
-  const statusUjuan = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Status Ujian');
-  if (!statusUjuan) return;
-  statusUjuan.getRange(row, 1).setValue(newStatus);
-}
   }
 }
