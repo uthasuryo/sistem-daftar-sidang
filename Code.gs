@@ -184,9 +184,13 @@ function submitPendaftaran(formData, files) {
       formData.judulSkripsi,
       'Menunggu Verifikasi',
       Utilities.formatDate(timestamp, 'Asia/Jakarta', 'dd/MM/yyyy HH:mm:ss'),
-      '',  // Tanggal Ujian
-      '',  // Ruang
-      '',  // Nilai Akhir
+      '',                          // I: Tanggal Ujian  (diisi admin)
+      '',                          // J: Ruang          (diisi admin)
+      '',                          // K: Penguji 1      (diisi admin)
+      '',                          // L: Penguji 2      (diisi admin)
+      formData.pembimbing1,        // M: Pembimbing 1
+      formData.pembimbing2 || '-', // N: Pembimbing 2
+      '',                          // O: Nilai Akhir    (diisi admin)
     ]);
 
     // Log aktivitas
@@ -250,17 +254,21 @@ function cekStatus(nim) {
       // Bandingkan NIM (kolom B = index 1) — convert ke string agar aman
       if (String(row[1]).trim() === String(nim).trim()) {
         results.push({
-          nomorPendaftaran: String(row[0] || '-'),
-          nim:              String(row[1] || '-'),
-          nama:             String(row[2] || '-'),
-          prodi:            String(row[3] || '-'),
-          jenjang:          String(row[4] || '-'),
-          judul:            String(row[5] || '-'),
-          status:           String(row[6] || 'Menunggu Verifikasi'),
-          tanggalDaftar:    String(row[7] || '-'),
-          tanggalUjian:     String(row[8] || 'Belum dijadwalkan'),
-          ruang:            String(row[9] || 'Belum ditentukan'),
-          nilai:            String(row[10] || 'Belum tersedia'),
+          nomorPendaftaran: String(row[0]  || '-'),
+          nim:              String(row[1]  || '-'),
+          nama:             String(row[2]  || '-'),
+          prodi:            String(row[3]  || '-'),
+          jenjang:          String(row[4]  || '-'),
+          judul:            String(row[5]  || '-'),
+          status:           String(row[6]  || 'Menunggu Verifikasi'),
+          tanggalDaftar:    String(row[7]  || '-'),
+          tanggalUjian:     String(row[8]  || 'Belum dijadwalkan'),
+          ruang:            String(row[9]  || 'Belum ditentukan'),
+          penguji1:         String(row[10] || 'Belum ditentukan'),
+          penguji2:         String(row[11] || 'Belum ditentukan'),
+          pembimbing1:      String(row[12] || '-'),
+          pembimbing2:      String(row[13] || '-'),
+          nilai:            String(row[14] || 'Belum tersedia'),
         });
       }
     }
