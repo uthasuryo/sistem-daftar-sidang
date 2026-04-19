@@ -187,6 +187,10 @@ function submitPendaftaran(formData, files) {
       '',  // Tanggal Ujian
       '',  // Ruang
       '',  // Nilai Akhir
+      formData.pembimbing1, // L: Pembimbing 1
+      formData.pembimbing2 || '-', // M: Pembimbing 2
+      '',  // N: Penguji 1 (diisi admin)
+      '',  // O: Penguji 2 (diisi admin)
     ]);
 
     // Log aktivitas
@@ -242,7 +246,7 @@ function cekStatus(nim) {
       return { found: false, message: 'Belum ada data pendaftaran dalam sistem.' };
     }
 
-    var data = sheet.getRange(2, 1, lastRow - 1, 11).getValues();
+    var data = sheet.getRange(2, 1, lastRow - 1, 15).getValues();
     var results = [];
 
     for (var i = 0; i < data.length; i++) {
@@ -261,6 +265,10 @@ function cekStatus(nim) {
           tanggalUjian:     String(row[8] || 'Belum dijadwalkan'),
           ruang:            String(row[9] || 'Belum ditentukan'),
           nilai:            String(row[10] || 'Belum tersedia'),
+          pembimbing1:      String(row[11] || '-'),
+          pembimbing2:      String(row[12] || '-'),
+          penguji1:         String(row[13] || 'Belum ditentukan'),
+          penguji2:         String(row[14] || 'Belum ditentukan'),
         });
       }
     }
