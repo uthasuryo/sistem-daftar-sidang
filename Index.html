@@ -1639,14 +1639,24 @@ function cekStatusPendaftaran() {
             + statusRow('Nama', d.nama)
             + statusRow('Program Studi', d.prodi)
             + statusRow('Jenjang', d.jenjang)
-            + statusRow('Tgl. Daftar', d.tanggalDaftar)
-            + statusRow('Tgl. Ujian', d.tanggalUjian)
+            + statusRow('Tgl. Daftar', formatTanggalID(d.tanggalDaftar))
+            + statusRow('Tgl. Ujian', formatTanggalID(d.tanggalUjian))
             + statusRow('Ruang', d.ruang)
             + statusRow('Nilai', d.nilai)
             + '</div>'
             + '<div style="margin-top:12px;padding:10px;background:var(--krem);border-radius:8px;font-size:0.8rem;color:var(--teks-mid);">'
             + '<strong>Judul:</strong> ' + d.judul
-            + '</div></div>';
+            + '</div>'
+            + '<div style="margin-top:10px;border-top:1px solid rgba(201,168,76,0.2);padding-top:10px;">'
+            + '<div style="font-size:0.72rem;font-weight:700;color:var(--teks-abu);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:8px;">Tim Pembimbing &amp; Penguji</div>'
+            + '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">'
+            + statusRow('Pembimbing 1', d.pembimbing1)
+            + (d.pembimbing2 && d.pembimbing2 !== '-' ? statusRow('Pembimbing 2', d.pembimbing2) : '')
+            + statusRow('Penguji 1', d.penguji1)
+            + statusRow('Penguji 2', d.penguji2)
+            + '</div>'
+            + '</div>'
+            + '</div>';
         });
         cont.innerHTML = html;
       })
@@ -1668,6 +1678,25 @@ function cekStatusPendaftaran() {
 
 function statusRow(key, val) {
   return `<div class="status-item"><span class="status-key">${key}</span><span class="status-val">${val}</span></div>`;
+}
+
+function formatTanggalID(str) {
+  if (!str || str === '-' || str === 'Belum dijadwalkan') return str;
+  var bulan = ['Januari','Februari','Maret','April','Mei','Juni',
+               'Juli','Agustus','September','Oktober','November','Desember'];
+  var m = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{2}:\d{2}))?/);
+  if (m) {
+    var tgl = parseInt(m[1], 10);
+    var bln = parseInt(m[2], 10) - 1;
+    var thn = m[3];
+    var jam = m[4] ? ', ' + m[4] : '';
+    return tgl + ' ' + bulan[bln] + ' ' + thn + (jam ? jam + ' WIB' : '');
+  }
+  var d = new Date(str);
+  if (!isNaN(d.getTime())) {
+    return d.getDate() + ' ' + bulan[d.getMonth()] + ' ' + d.getFullYear();
+  }
+  return str;
 }
 
 // ══════════════════════════════════════════
